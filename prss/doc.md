@@ -2,6 +2,8 @@
 
 This service is to maintain and manage presence information and presence subscription of clients.
 
+**Presence information will be store in memory currently. And I consider to put them into Redia in future.**
+
 ##REST API
 
 ####/presence
