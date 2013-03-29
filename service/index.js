@@ -1,7 +1,5 @@
 
-module.exports.d = function d(resource, method, params, callback) {
-
-};
+module.exports.d = require('../data/routers');
 
 module.exports.app = function app(resource, method, session, params, callback) {
 
