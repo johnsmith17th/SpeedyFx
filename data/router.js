@@ -9,9 +9,10 @@ var route = {
     '/message': resource.message
 }
 
-module.exports = router = function (res, method, params, callback) {
+var router = module.exports = function (res, method, params, callback) {
 
     if (route[res] && route[res][method])
         route[res][method](params, callback);
     else callback(model.errors.e404);
 };
+
