@@ -5,16 +5,16 @@ This service is to maintain and manage presence information and presence subscri
 ##REST API
 
 ####/presence
-* GET: Get presence information of user.
-		params uid
-
+* GET - Get presence information of user.
+* PUT - Update presence information of user.
+* DEL - Delete presence information of user.
 
 ####/presence/q
-* POST
+* POST - Query the presence information of users.
 
 ####/subscription
-* PUT
-* DELETE
+* PUT - Create or update presence subscription of client.
+* DEL - Delete presence subscription of client.
 
 ####/subscriber
-* GET
+* GET - Get subscriber of user.
