@@ -9,7 +9,7 @@ The service access layer is to cooperate each service entity to communicate with
     app(resource, method, session, params, callback)
 
 ###Presence Service Access
-    prs(resource, method, session, params, callback)
+    prs(resource, method, params, callback)
 
 ###Communication Service Access
-    comm(resource, method, session, params, callback)
+    comm(resource, method, params, callback)
