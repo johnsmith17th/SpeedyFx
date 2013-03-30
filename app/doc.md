@@ -19,11 +19,11 @@ This service entity is for management of account, user, contact, and message.
 * PUT - Add user contact or update contact alias
 * DEL - Delete contact of user
 
-### /user/blacklist
+#### /user/blacklist
 * GET - Get user blacklist
 * PUT - Add somebody to blacklist
 * DEL - Delete from blacklist
 
-### /user/message
+#### /user/message
 * GET - Get offline message of user
 * DEL - Delete the message
