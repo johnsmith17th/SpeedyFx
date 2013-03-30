@@ -9,3 +9,8 @@ function delMessage(session, params, callback) {
     if (params.mid) p.mid = params.mid;
     servs.d('/message', 'delete', p, callback);
 }
+
+module.exports = {
+    get: getMessage,
+    del: delMessage
+}
