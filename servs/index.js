@@ -1,9 +1,7 @@
 
 module.exports.d = require('../data/router');
 
-module.exports.app = function app(resource, method, session, params, callback) {
-
-};
+module.exports.app = require('../app/router');
 
 module.exports.prs = require('../prss/router');
 
