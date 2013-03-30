@@ -11,6 +11,8 @@ var route = {
 
 var router = module.exports = function (res, method, params, callback) {
 
+    if (method == 'delete') method = 'del';
+
     if (route[res] && route[res][method])
         route[res][method](params, callback);
     else callback(model.errors.e404);
