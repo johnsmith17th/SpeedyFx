@@ -8,22 +8,30 @@ function hmacPassword(key, text) {
     return hash;
 };
 
-function auth(session, params, callback) {
+function postAuth(session, params, callback) {
 
     var uid = params.uid,
         pwd = (params.pwd) ? hmacPassword(pwdSalt, params.pwd) : params.pwd;
 
-    servs.d('/user', 'get', { uid: uid, pwd: pwd, filter: 'uid' }, callback);
+    servs.d('/user', 'get', { uid: uid, pwd: pwd, filter: 'uid' }, function (e, r) {
+        if (e) callback(e, false);
+        else if (r) callback(e, true);
+        else callback(e, false);
+    });
 };
 
-function reg(session, params, callback) {
+function postReg(session, params, callback) {
 
-    if (params.pwd) params.pwd = hmacPassword(pwdSalt, params.pwd);
-
-    servs.d('/user', 'post', params, callback);
+    var p = {
+        uid: params.email,
+        pwd: (params.pwd) ? hmacPassword(pwdSalt, params.pwd) : params.pwd,
+        email: params.email,
+        nick: params.nick
+    };
+    servs.d('/user', 'post', p, callback);
 };
 
 module.exports = {
-    auth: { post: auth },
-    register: { post: reg }
+    auth: { post: postAuth },
+    register: { post: postReg }
 };
