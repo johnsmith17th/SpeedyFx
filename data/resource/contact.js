@@ -1,4 +1,4 @@
-var model = require('../model');er
+var model = require('../model');
 
 var filter = { _id: 0 };
 
