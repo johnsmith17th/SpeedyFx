@@ -8,6 +8,7 @@ var app = module.exports = express();
 var sockets = app.sockets = {};
 var sessions = app.sessions = new SessionStore();
 var handlers = app.handlers = require('./handler');
+var services = app.services = require('../servs');
 
 app.config(function () {
     app.use(express.bodyParser());
@@ -18,7 +19,16 @@ app.config(function () {
 });
 
 app.post('/auth', function (req, res) {
-
+    var p = {
+        uid: req.param('email'),
+        pwd: req.param('pwd')
+    };
+    services.app('/auth', 'post', {}, p, function (e, r) {
+        if (r) {
+            req.session.uid = p.uid;
+            res.send(200, req.sessions.id);
+        } else res.send(401, 'Unauthorized');
+    });
 });
 
 app.post('/register', function (req, res) {
