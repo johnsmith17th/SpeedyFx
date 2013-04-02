@@ -2,40 +2,7 @@
 
 This service focus on data storage and data access and should ignore any application or business logic. It use **mongodb** as underlying database currently.
 
-## Schema
-
-Schema of data collections can be found in **model.js**
-
-### User
-	var UserSchema = new Schema({
-    	uid: { type: String, required: true, index: { unique: true } },
-    	pwd: { type: String, required: true, select: false },
-    	nick: { type: String, required: true },
-    	email: { type: String, required: true },
-    	gender: String,
-    	image: String,
-    	status: String,
-    	addres: String,
-    	phone: String
-	});
-
-### Contact
-	var ContactSchema = new Schema({
-    	uid: { type: String, required: true, index: true },
-    	cid: { type: String, required: true, index: true },
-    	alias: { type: String, 'default': '' },
-    	black: { type: Boolean, 'default': false }
-	});
-
-### Message
-	var MessageSchema = new Schema({    
-    	uid: { type: String, required: true, index: true },
-    	mid: { type: String, required: true, index: true },
-    	msg: { type: String, required: true },
-    	time: { type: String, required: true, 'default': Date.now }
-	});
-
-##REST API
+## REST API
 
 ### /user
 
@@ -55,3 +22,32 @@ Schema of data collections can be found in **model.js**
 * GET - Get messages
 * POST - Create a message
 * DEL - Delete messages
+
+## Data Structure
+
+### User
+
+* uid -	user identification, required and must be unique, email by default
+* pwd - password for authentication, required
+* nick - display name of user, required
+* email - email address of user, required
+* gender - gender of user, could be **male** or **female**
+* image - a URL of user's avartar
+* status - description information of  user
+* address - where the user is
+* location - (not available yet) geocode that identify the location of user
+* phone - phone number of user
+
+### Contact
+
+* uid - user identification
+* cid - contact user identification
+* alias - contact alias
+* black - whether the contact is  in blacklist
+
+### Message
+
+* uid - user identification for receiver of message
+* mid - message identification
+* msg - the message raw data
+* time - the moment the server received the message
