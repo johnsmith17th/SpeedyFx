@@ -1,8 +1,12 @@
 var express = require('express'),
-    sio = require('socket.io');
+    sio = require('socket.io'),
+    http = require('http'),
+    crypto = require('crypto'),
+    connect = require('express/node_modules/connect'),
+    cookie = require('express/node_modules/cookie');
 
-var parseCookie = express.connect.utils.parseCookie,
-    SessionStore = express.connect.middleware.session.memory;
+var SessionStore = connect.middleware.session.MemoryStore,
+    sessionSec = 'session-sec';
 
 var app = module.exports = express();
 var sockets = app.sockets = {};
@@ -13,7 +17,7 @@ var services = app.services = require('../servs');
 app.config(function () {
     app.use(express.bodyParser());
     app.use(express.cookieParser());
-    app.use(express.session({ secret: 'speedfx', store: sessions }));
+    app.use(express.session({ secret: sessionSec, store: sessions }));
     app.use(express.methodOverride());
     app.use(app.router);
 });
@@ -25,6 +29,7 @@ app.post('/auth', function (req, res) {
     };
     services.app('/auth', 'post', {}, p, function (e, r) {
         if (r) {
+            req.session.sid = req.session.id;
             req.session.uid = p.uid;
             res.send(200, req.sessions.id);
         } else res.send(401, 'Unauthorized');
@@ -35,40 +40,41 @@ app.post('/register', function (req, res) {
 
 });
 
-var io = app.io = sio.listen(app);
+var io = app.io = sio.listen(http.createServer(app), { log: false });
 
-io.set('authorization', function (handshakeData, callback) {
+io.set('authorization', function (handshake, callback) {
 
-    handshakeData.cookie = parseCookie(handshakeData.headers.cookie);
-
-    var sid = handshakeData.cookie['sid'],
-        uid = handshakeData.cookie['uid'];
+    handshake.cookie = cookie.parse(handshake.headers.cookie);
+    var sid = connect.utils.parseSignedCookie(handshake.cookie['connect.sid'], sessionSec);
 
     if (sid) {
         sessions.get(sid, function (err, session) {
-            if (err) callback(err.message, false);
-            else {
-                handshakeData.sid = sid;
-                handshakeData.uid = uid;
+            if (session) {
+                handshake.session = {
+                    sid: session.sid,
+                    uid: session.uid
+                };
                 callback(null, true);
             }
+            else callback('Session not found', false);
         });
     }
-    else callback('no session');
+    else callback('Session not found', false);
 });
 
 io.sockets.on('connection', function (socket) {
 
-    var sid = socket.handshake.sid;
+    var session = socket.handshake.session;
 
-    socket.on('message', function (msg, callback) {
-        msg = JSON.parse(msg);
-        if (handlers[msg.type])
-            handlers[msg.type](app, socket, msg);
+    sockets[session.sid] = socket;
+
+    socket.on('message', function (data, callback) {
+        if ('function' == typeof (handlers[data.type]))
+            handlers[data.type](data);
         callback(true);
     });
 
     socket.on('disconnect', function () {
-        delete app.sockets[sid];
+        delete sockets[session.sid];
     });
 });

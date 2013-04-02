@@ -6,12 +6,12 @@ function handlePrs(app, socket, d) {
     
 }
 
-function handleRQ(app, socket, d) {
+function handleRq(app, socket, d) {
     
 }
 
 module.exports = {
     'speedyfx:msg': handleMsg,
     'speedyfx:prs': handlePrs,
-    'speedyfx:rq': handleRQ
+    'speedyfx:rq': handleRq
 };
