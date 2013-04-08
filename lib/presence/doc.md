@@ -4,6 +4,16 @@ This service is to maintain and manage presence information and presence subscri
 
 **Presence information will be store in memory currently. And I consider to put them into Redis in future.**
 
+## Data Structure
+
+### Presence
+* uid - User identification
+* cid - Client/Session identification
+* status - Presence status, online(offline for client only), busy, away, hide
+* time - Update time
+* client - Client type, Android, iPhone, Web, etc.
+* agent - Agent server identification
+
 ## REST API
 
 ####/presence
